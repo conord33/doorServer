@@ -1,11 +1,10 @@
 window.onload = function() {
  
-    var currentState;
-    var socket = io.connect('http://localhost:3030');
+    var userSocket = io.connect('http://localhost:3030/user');
     var openButton = document.getElementById("openButton");
     var buzzerState = document.getElementById("buzzerState");
  
-    socket.on('buzzing', function (data) {
+    userSocket.on('buzzing', function (data) {
         if (data.state) {
             buzzerState.innerHTML = 'buzzing...';
         } else {
@@ -14,15 +13,15 @@ window.onload = function() {
     });
  
     openButton.onmousedown = function() {
-        socket.emit('button', { 'state':'pressed' });
+        userSocket.emit('button', { 'state':'pressed' });
     };
 
     openButton.onmouseout = function() {
-        socket.emit('button', { 'state':'released' });
+        userSocket.emit('button', { 'state':'released' });
     };
 
     openButton.onmouseup = function() {
-        socket.emit('button', { 'state':'released' });
+        userSocket.emit('button', { 'state':'released' });
     };
  
 }

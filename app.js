@@ -30,19 +30,19 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
-app.get('/users', user.list);
 
 server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-io.sockets.on('connection', function (socket) {
+var users = io.of('/user').on('connection', function (socket) {
     socket.on('button', function (data) {
-      if (data.state == 'pressed') {
-        io.sockets.emit('buzzing', {'state':true});
-      } else if (data.state == 'released') {
-        io.sockets.emit('buzzing', {'state':false})
-      }
-        
+       server.emit('button', data);
+    });
+});
+
+var server = io.of('/server').on('connection', function (socket) {
+    socket.on('buzzing', function (data) {
+       users.emit('buzzing', data);
     });
 });
